@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="jquery.equalHeightInRow.js"></script>
+
+    <script>
+        function init () {
+            $('.block').equalHeightInRow({
+                child: ['.inner-block','.inner-block-2']
+            });
+        };
+
+        $(function () {
+
+            init();
+
+            $('#enable-height').click(function() {
+                init();
+            });
+
+            $('#disable-height').click(function() {
+                $('.block, .inner-block,.inner-block-2').css({
+                    'height': '',
+                    'min-height': ''
+                });
+            });
+
+        });
+    </script>
+
+</head>
+<body>
+
+    <div class="text">
+
+        <h1>The jQuery plugin for equal height of the elements in the row</h1>
+
+        <h3>How to Use</h3>
+
+        Call the plugin on the elements to equal their height.
+
+        <pre>
+            $('.block').equalHeightInRow();
+        </pre>
+
+        Equal height child elements
+
+        <pre>
+            $('.block').equalHeightInRow({
+                child: ['.inner-block','.inner-block-2']
+            });
+        </pre>
+
+        Callback's
+        <pre>
+        $('.block').equalHeightInRow({
+
+            // Before assigning height in the row
+            onRowBefore: function ( elements ) {
+                console.log( 'elements in row before set height', elements )
+            },
+            // After assigning height in the row
+            onRowAfter: function ( elements ) {
+                console.log( 'elements in row after set height', elements )
+            },
+            // Before the resize event
+            onResizeBefore: function ( elements ) {
+                console.log( 'all elements before resize', elements )
+            },
+            // After the resize event
+            onResizeAfter: function ( elements ) {
+                console.log( 'all elements after resize', elements )
+            },
+            // Executes immediately after plugin is fully loaded
+            onLoad: function ( elements ) {
+                console.log( 'all elements after set height', elements )
+            }
+        });
+        </pre>
+
+    </div>
+
+
+    <h2>Example</h2>
+
+    <div class="buttons">
+        <button id="disable-height">Disabled plugin</button>
+        <button id="enable-height">Enable plugin</button>
+    </div>
+    
+    <div class="block-wrap">
+
+        <div class="block">
+            <div class="inner-block">consectetur, possimus laboriosam?</div>
+
+            <div class="inner-block-2">Quibusdam alias dicta distinctio officia iure tempora,!</div>
+            
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block"><div>Lorem ipsum dolor sit amet Labore?</div></div>
+
+            <div class="inner-block-2">Necessitatibus tempora voluptatem fugit, magnam id!</div>
+
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block">Lorem ipsum dolor sit amet, consectetur adipisicing elit?</div>
+
+            <div class="inner-block-2">Lorem ipsum</div>
+            
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block"><div>sapiente est temporibus perspiciatis asperiores voluptatum tempora.</div>
+            </div>
+
+            <div class="inner-block-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+
+        </div>
+
+        <div class="block">
+            <div class="inner-block">Dolorum cupiditate sit illo, consectetur, possimus laboriosam?</div>
+
+            <div class="inner-block-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </div>
+            
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block"><div>cum necessitatibus neque</div></div>
+
+            <div class="inner-block-2">Lorem</div>
+
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block">Lorem ipsum dolor sit amet?</div>
+
+            <div class="inner-block-2">ipsumLorem ipsum orem ipsum Lorem ipsum orem ipsum</div>
+            
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block"><div>temporibus perspiciatis asperiores voluptatum tempora.</div>
+
+            </div>
+
+            <div class="inner-block-2">Lorem ipsum dolor Lorem ipsum dolor</div>
+
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block"><div>cum necessitatibus neque</div></div>
+
+            <div class="inner-block-2">Lorem cum necessitatibus neque</div>
+
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block"><div>cum necessitatibus neque</div></div>
+
+            <div class="inner-block-2">Lorem</div>
+
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block">Lorem ipsum dolor sit amet?</div>
+
+            <div class="inner-block-2">ipsum Lorem ipsum orem ipsum</div>
+            
+        </div>
+
+        <div class="block">
+
+            <div class="inner-block">Lorem ipsum dolor sit amet?</div>
+
+            <div class="inner-block-2">ipsumLorem ipsum orem</div>
+            
+        </div>
+
+    </div>
+
+</body>
+</html>

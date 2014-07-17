@@ -1,0 +1,44 @@
+body {
+    background: #6f6f6f;
+    color: #c9c9c9;
+    max-width: 900px;
+    margin: 0px auto;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.text {
+    margin: auto;
+}
+
+.buttons {
+    text-align: center;
+}
+
+button {
+
+}
+
+.block-wrap {
+    text-align: center;
+}
+
+.block {
+    display: inline-block;
+    width: 100px;
+    margin: 15px;
+    vertical-align: top;
+    box-shadow: 0 0 10px #cdcdcd;
+    border-radius: 5px;
+}
+
+.inner-block {
+    padding: 15px;
+}
+
+.inner-block-2 {
+    padding: 15px;
+    border-top: 1px solid #cdcdcd;
+}
