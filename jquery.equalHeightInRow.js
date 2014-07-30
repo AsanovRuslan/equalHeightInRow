@@ -18,23 +18,33 @@
     var method = {
 
         // Count elements in a row
-        countElementInRow: function ( wrap, element ) {
-            return Math.floor(wrap.width() / wrap.find(element).eq(0).outerWidth(true));
-            
+        countElementInRow: function ( wrap, elements ) {
+
+            var count = 0,
+                positionTop = elements.eq(0).position().top ;
+
+            elements.each(function( index ) {
+                if ( $(this).position().top > positionTop ) {
+                    count = index;
+                    return false;
+                };
+            });
+
+            return count;           
         },
 
-        // Get max height of the element
-        getMaxHeight: function ( element ) {
+        // Get max height of the elements
+        getMaxHeight: function ( elements ) {
 
             var height = 0;
 
             // Resetting height elements for real values
-            element.css({
+            elements.css({
                 'height': '',
                 'min-height': 0
             });
 
-            element.each(function() {
+            elements.each(function() {
 
                 if ( $(this).height() > height ) {
                     height = $(this).height();
@@ -46,16 +56,16 @@
         },
 
         // Set height
-        setHeight: function ( element, height ) {
+        setHeight: function ( elements, height ) {
 
-            if ( element.eq(0).css('display') == "table-cell" ) {
-                element.css('height', height);
+            if ( elements.eq(0).css('display') == "table-cell" ) {
+                elements.css('height', height);
             } else {
-                element.css('min-height', height);
+                elements.css('min-height', height);
             };
 
             return {
-                element: element,
+                elements: elements,
                 height: height
             }
             
@@ -116,9 +126,8 @@
                     rowCount : 1
 
                 };
-
                 // Amount elements in a row
-                setup.amountInRow = method.countElementInRow(setup.thisWrap, element) || 0;
+                setup.amountInRow = method.countElementInRow(setup.thisWrap, setup.thisElement) || 0;
 
                 // Amount row in a parent
                 setup.rowCount = Math.ceil(setup.thisElement.length/setup.amountInRow);
