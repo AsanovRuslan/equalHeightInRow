@@ -36,7 +36,8 @@
         // Get max height of the elements
         getMaxHeight: function ( elements ) {
 
-            var height = 0;
+            var height = 0,
+                eachHeight = 0;
 
             // Resetting height elements for real values
             elements.css({
@@ -46,8 +47,10 @@
 
             elements.each(function() {
 
-                if ( $(this).height() > height ) {
-                    height = $(this).height();
+                eachHeight = $(this).outerHeight();
+
+                if ( eachHeight > height ) {
+                    height = eachHeight;
                 };
 
             });
