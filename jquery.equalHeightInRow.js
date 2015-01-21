@@ -1,6 +1,6 @@
 /***
 *
-* jquery.equalHeightInRow v1.0
+* jquery.equalHeightInRow v1.1
 * The jQuery plugin for equal height of the elements in the row
 * Asanov Ruslan //github.com/AsanovRuslan
 * Released under the MIT license - http://opensource.org/licenses/MIT
@@ -18,10 +18,32 @@
     var method = {
 
         // Count elements in a row
-        countElementInRow: function ( wrap, elements ) {
+        countElementInRow: function ( elements, eachRow ) {
 
             var count = 0,
-                positionTop = elements.eq(0).position().top ;
+                positionTop = elements.eq(0).position().top;
+
+            if ( eachRow ) {
+                var countArray = [];
+
+                elements.each(function( index ) {
+                    
+                    if ( $(this).position().top > positionTop ) {
+                        positionTop = elements.eq(index).position().top;
+                        countArray.push(count);
+                        count = 0;
+                    };
+
+                    count++;
+
+                });
+
+                // last row
+                countArray.push(count);
+
+                // return the number of elements in a row
+                return countArray;
+            };
 
             elements.each(function( index ) {
                 if ( $(this).position().top > positionTop ) {
@@ -83,11 +105,23 @@
             // Child elements. Example ['.child1','.child2']
             child: [],
 
+            // Apply for each row
+            eachRow: false,
+
             // Execute after full page load
             windowLoad: false,
 
             // Reset on full page load, callback "onLoad" not call
             windowLoadReset: false,
+
+            // Reset on full page load, callback "onLoad" not call
+            windowLoadReset: false,
+
+            // Aplly only child
+            applyOnlyChild: false,
+
+            // Set custom parent
+            parent: false,
 
             //CALLBACKS
 
@@ -110,7 +144,7 @@
         }, options);
 
         var element = this;
-        var wrap = $(element).parent();
+        var wrap = settings.parent ? $(element).closest(settings.parent) : $(element).parent();
         var pluginLoader = false;
 
 
@@ -129,11 +163,68 @@
                     rowCount : 1
 
                 };
+
                 // Amount elements in a row
-                setup.amountInRow = method.countElementInRow(setup.thisWrap, setup.thisElement) || 0;
+                setup.amountInRow = method.countElementInRow(setup.thisElement, settings.eachRow) || 0;
+
+                // If needed calculate for each line
+                if ( settings.eachRow ) {
+
+                    var count = 1;
+                    var current = 0;
+                    var el = [];
+
+                    setup.thisElement.each(function( index ) {
+
+                        // Add each line item in the array
+                        el.push(this);
+
+                        // If you are on the last item in a row 
+                        // or if it is the last element in the parent
+                        if ( count == setup.amountInRow[current] || !setup.thisElement[index+1] ) {
+
+                            var $el = $(el)
+
+                            settings.onRowBefore( $el );
+
+                            // First, set the height of the child elements
+                            for ( var i = 0; i < settings.child.length; i++ ) {
+                                method.setHeight( 
+                                    $el.find(settings.child[i]), 
+                                    method.getMaxHeight( $el.find(settings.child[i]) )
+                                );
+                            }
+
+                            // Sets the height the element itself
+                            if ( !settings.applyOnlyChild ) {
+                                method.setHeight( 
+                                    $el, 
+                                    method.getMaxHeight( $el )
+                                ); 
+                            };
+                            
+
+                            settings.onRowAfter( $el );
+
+                            // Clear the array elements in the jump to a new line
+                            el = [];
+                            count = 0;
+                            current++;
+
+                        };
+
+                        count++;
+                        
+                    });
+                    
+                    
+                    return true;
+                    
+                };
 
                 // Amount row in a parent
                 setup.rowCount = Math.ceil(setup.thisElement.length/setup.amountInRow);
+
 
                 // If the amount of rows > 1
                 if ( setup.rowCount > 1 ) {
@@ -162,19 +253,23 @@
                             }
 
                             // Sets the height the element itself
-                            method.setHeight( 
-                                $el, 
-                                method.getMaxHeight( $el )
-                            );
+                            if ( !settings.applyOnlyChild ) {
+                                method.setHeight( 
+                                    $el, 
+                                    method.getMaxHeight( $el )
+                                );
+                            }
 
                             settings.onRowAfter( $el );
 
-                            // Clear the array elements in the transition to a new line
+                            // Clear the array elements in the jump to a new line
                             el = [];
 
                         };
                         
                     });
+
+                    return true;
 
                 };
 
