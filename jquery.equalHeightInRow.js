@@ -1,38 +1,126 @@
 /***
-*
-* jquery.equalHeightInRow v1.1
-* The jQuery plugin for equal height of the elements in the row
-* Asanov Ruslan //github.com/AsanovRuslan
-* Released under the MIT license - http://opensource.org/licenses/MIT
+ *
+ * jquery.equalHeightInRow v1.1
+ * The jQuery plugin for equal height of the elements in the row
+ * Asanov Ruslan //github.com/AsanovRuslan
+ * Released under the MIT license - http://opensource.org/licenses/MIT
 
-* EXAMPLE
-* $('.block').equalHeightInRow();
-*
-* Equal height internal child elements
-* $('.block').equalHeightInRow({ child: ['.child1,.child2']});
-*
-***/
+ * EXAMPLE
+ * $('.block').equalHeightInRow();
+ *
+ * Equal height internal child elements
+ * $('.block').equalHeightInRow({ child: ['.child1,.child2']});
+ *
+ ***/
 
-;(function ( $ ) {
+;(function( $ ) {
 
     var method = {
 
-        // Count elements in a row
-        countElementInRow: function ( elements, eachRow ) {
+        /**
+         * Handler load images
+         * @param {object} image
+         * @param {object} deferred
+         * @returns {object} - Deferred object
+         */
+        imageLoad : function( image, deferred ) {
 
-            var count = 0,
-                positionTop = elements.eq(0).position().top;
+            var _this = image.get(0);
 
-            if ( eachRow ) {
+            image.each(function() {
+
+                if( image.is('img') ) {
+                    image.one("load", function() {
+                        // Notifies that loading image is completed
+                        deferred.notify();
+                    });
+                    // If image is not loaded
+                    if( (!_this.complete) || (typeof _this.naturalWidth !== "undefined" && _this.naturalWidth === 0) ) {
+                        return false;
+                    } else {
+                        image.trigger('load');
+                    }
+                }
+
+            });
+
+            return deferred;
+
+        },
+
+        /**
+         * Handler load row
+         * @param {object} row - line items
+         * @returns {object} - Deferred object
+         */
+        rowLoad : function( row ) {
+
+            var rowDeferred = $.Deferred(function() {
+                this.count = 0;
+            });
+            var rowLength = row.length;
+
+            row.each(function() {
+
+                var $this         = $(this);
+                var images        = $this.find('img');
+                var imagesLength  = images.length;
+                var imageDeferred = $.Deferred(function() {
+                    this.count = 0;
+                });
+
+                imageDeferred.progress(function() {
+                    imageDeferred.count++;
+                    // If the loading images in a row completed
+                    if( imageDeferred.count == imagesLength ) {
+                        imageDeferred.resolve();
+                    }
+                }).always(function() {
+                    // Notifies that loading image in block is completed
+                    setTimeout(function() {
+                        rowDeferred.notify();
+                    }, 0)
+
+                });
+
+                // Process each image individually
+                images.each(function() {
+                    method.imageLoad($(this), imageDeferred);
+                });
+
+            });
+
+            return rowDeferred.progress(function() {
+                rowDeferred.count++;
+                // Notifies that loading image in row is completed
+                if( rowDeferred.count == rowLength ) {
+                    rowDeferred.resolve();
+                }
+            }).promise();
+
+        },
+
+        /**
+         * Count elements in a row
+         * @param {object} elements
+         * @param {boolean} forEachRow
+         * @returns {*}
+         */
+        countElementInRow : function( elements, forEachRow ) {
+
+            var count       = 0;
+            var positionTop = elements.eq(0).position().top;
+
+            if( forEachRow ) {
                 var countArray = [];
 
                 elements.each(function( index ) {
-                    
-                    if ( $(this).position().top > positionTop ) {
+
+                    if( $(this).position().top > positionTop ) {
                         positionTop = elements.eq(index).position().top;
                         countArray.push(count);
                         count = 0;
-                    };
+                    }
 
                     count++;
 
@@ -43,136 +131,141 @@
 
                 // return the number of elements in a row
                 return countArray;
-            };
+            }
 
             elements.each(function( index ) {
-                if ( $(this).position().top > positionTop ) {
+                if( $(this).position().top > positionTop ) {
                     count = index;
                     return false;
-                };
+                }
             });
 
-            return count;           
+            return count;
         },
 
-        // Get max height of the elements
-        getMaxHeight: function ( elements ) {
+        /**
+         * Get max height
+         * @param elements
+         * @returns {number}
+         */
+        getMaxHeight : function( elements ) {
 
-            var height = 0,
-                eachHeight = 0;
+            var height     = 0;
+            var eachHeight = 0;
 
             // Resetting height elements for real values
             elements.css({
-                'height': '',
-                'min-height': 0
+                'height'     : '',
+                'min-height' : 0
             });
 
             elements.each(function() {
 
                 eachHeight = $(this).outerHeight();
 
-                if ( eachHeight > height ) {
+                if( eachHeight > height ) {
                     height = eachHeight;
-                };
+                }
 
             });
 
             return height;
         },
 
-        // Set height
-        setHeight: function ( elements, height ) {
+        /**
+         * Set height
+         * @param elements
+         * @param height
+         * @returns {{elements: {object}, height: {number}}}
+         */
+        setHeight : function( elements, height ) {
 
-            if ( elements.eq(0).css('display') == "table-cell" ) {
+            if( elements.eq(0).css('display') == "table-cell" ) {
                 elements.css('height', height);
             } else {
                 elements.css('min-height', height);
-            };
+            }
 
             return {
-                elements: elements,
-                height: height
+                elements : elements,
+                height   : height
             }
-            
+
         }
 
     };
 
-    $.fn.equalHeightInRow = function ( options ) {
+    $.fn.equalHeightInRow = function( options ) {
 
         var settings = $.extend({
 
             // Child elements. Example ['.child1','.child2']
-            child: [],
+            child           : [],
 
             // Apply for each row
-            eachRow: false,
+            eachRow         : false,
 
             // Execute after full page load
-            windowLoad: false,
+            windowLoad      : false,
 
             // Reset on full page load, callback "onLoad" not call
-            windowLoadReset: false,
+            windowLoadReset : false,
 
-            // Reset on full page load, callback "onLoad" not call
-            windowLoadReset: false,
-
-            // Aplly only child
-            applyOnlyChild: false,
+            // Apply only child
+            applyOnlyChild  : false,
 
             // Set custom parent
-            parent: false,
+            parent          : false,
 
             //CALLBACKS
 
             // Before assigning height in the row
-            onRowBefore: function () {},
+            onRowBefore     : function() {},
 
             // After assigning height in the row
-            onRowAfter: function () {},
+            onRowAfter      : function() {},
 
             // Before the resize event
-            onResizeBefore: function () {},
+            onResizeBefore  : function() {},
 
             // After the resize event
-            onResizeAfter: function () {},
-            
+            onResizeAfter   : function() {},
+
             // Executes immediately after plugin is fully loaded
-            onLoad: function () {}
+            onLoad          : function() {}
 
 
         }, options);
 
-        var element = this;
-        var wrap = settings.parent ? $(element).closest(settings.parent) : $(element).parent();
+        var element      = this;
+        var wrap         = settings.parent ? $(element).closest(settings.parent) : $(element).parent();
         var pluginLoader = false;
 
 
-        if ( !element.length ) {
+        if( !element.length ) {
             return false;
-        };
+        }
 
-        function init () {
+        function init() {
 
             // Loop each parent elements
             wrap.each(function() {
 
                 var setup = {
-                    thisWrap : $(this),
+                    thisWrap    : $(this),
                     thisElement : $(this).find(element),
-                    rowCount : 1
-
+                    rowCount    : 1
                 };
 
                 // Amount elements in a row
                 setup.amountInRow = method.countElementInRow(setup.thisElement, settings.eachRow) || 0;
 
                 // If needed calculate for each line
-                if ( settings.eachRow ) {
+                if( settings.eachRow ) {
 
-                    var count = 1;
+                    var count   = 1;
                     var current = 0;
-                    var el = [];
+                    var el      = [];
 
                     setup.thisElement.each(function( index ) {
 
@@ -181,135 +274,140 @@
 
                         // If you are on the last item in a row 
                         // or if it is the last element in the parent
-                        if ( count == setup.amountInRow[current] || !setup.thisElement[index+1] ) {
+                        if( count == setup.amountInRow[current] || !setup.thisElement[index + 1] ) {
 
-                            var $el = $(el)
+                            var $el = $(el);
 
-                            settings.onRowBefore( $el );
+                            settings.onRowBefore($el);
 
-                            // First, set the height of the child elements
-                            for ( var i = 0; i < settings.child.length; i++ ) {
-                                method.setHeight( 
-                                    $el.find(settings.child[i]), 
-                                    method.getMaxHeight( $el.find(settings.child[i]) )
-                                );
-                            }
+                            method.rowLoad($el).always(function() {
 
-                            // Sets the height the element itself
-                            if ( !settings.applyOnlyChild ) {
-                                method.setHeight( 
-                                    $el, 
-                                    method.getMaxHeight( $el )
-                                ); 
-                            };
-                            
+                                // First, set the height of the child elements
+                                for( var i = 0; i < settings.child.length; i++ ) {
+                                    method.setHeight(
+                                        $el.find(settings.child[i]), 
+                                        method.getMaxHeight($el.find(settings.child[i]))
+                                    );
+                                }
 
-                            settings.onRowAfter( $el );
+                                // Sets the height the element itself
+                                if( !settings.applyOnlyChild ) {
+                                    method.setHeight($el, method.getMaxHeight($el));
+                                }
+
+
+                                settings.onRowAfter($el);
+
+                            });
 
                             // Clear the array elements in the jump to a new line
                             el = [];
                             count = 0;
                             current++;
 
-                        };
+                        }
 
                         count++;
-                        
+
                     });
-                    
-                    
+
+
                     return true;
-                    
-                };
 
-                // Amount row in a parent
-                setup.rowCount = Math.ceil(setup.thisElement.length/setup.amountInRow);
+                } else {
+
+                    // Amount row in a parent
+                    setup.rowCount = Math.ceil(setup.thisElement.length / setup.amountInRow);
 
 
-                // If the amount of rows > 1
-                if ( setup.rowCount > 1 ) {
+                    // If the amount of rows > 1
+                    if( setup.rowCount > 1 ) {
 
-                    var el = [];
+                        var el = [];
 
-                    setup.thisElement.each(function( index ) {
+                        setup.thisElement.each(function( index ) {
 
-                        // Add each line item in the array
-                        el.push(this);
+                            // Add each line item in the array
+                            el.push(this);
 
-                        // If you are on the last item in a row 
-                        // or if it is the last element in the parent
-                        if ( (index+1)%setup.amountInRow == 0 || !setup.thisElement[index+1] ) {
+                            // If you are on the last item in a row
+                            // or if it is the last element in the parent
+                            if( (index + 1) % setup.amountInRow == 0 || !setup.thisElement[index + 1] ) {
 
-                            var $el = $(el)
+                                var $el = $(el);
 
-                            settings.onRowBefore( $el );
+                                settings.onRowBefore($el);
+
+                                method.rowLoad($el).always(function() {
+
+                                    // First, set the height of the child elements
+                                    for( var i = 0; i < settings.child.length; i++ ) {
+                                        method.setHeight(
+                                            $el.find(settings.child[i]), 
+                                            method.getMaxHeight($el.find(settings.child[i]))
+                                        );
+                                    }
+
+                                    // Sets the height the element itself
+                                    if( !settings.applyOnlyChild ) {
+                                        method.setHeight($el, method.getMaxHeight($el));
+                                    }
+
+                                    settings.onRowAfter($el);
+
+                                });
+
+                                // Clear the array elements in the jump to a new line
+                                el = [];
+
+                            }
+
+                        });
+
+                        return true;
+
+                    } else if( setup.rowCount == 1 ) { // If the amount of rows == 1
+
+                        settings.onRowBefore(setup.thisElement);
+
+                        method.rowLoad($el).always(function() {
 
                             // First, set the height of the child elements
-                            for ( var i = 0; i < settings.child.length; i++ ) {
-                                method.setHeight( 
-                                    $el.find(settings.child[i]), 
-                                    method.getMaxHeight( $el.find(settings.child[i]) )
+                            for( var i = 0; i < settings.child.length; i++ ) {
+                                method.setHeight(
+                                    setup.thisWrap.find(settings.child[i]), 
+                                    method.getMaxHeight(setup.thisWrap.find(settings.child[i]))
                                 );
                             }
 
                             // Sets the height the element itself
-                            if ( !settings.applyOnlyChild ) {
-                                method.setHeight( 
-                                    $el, 
-                                    method.getMaxHeight( $el )
-                                );
-                            }
+                            method.setHeight(
+                                setup.thisElement, 
+                                method.getMaxHeight(setup.thisWrap.find(setup.thisElement))
+                            );
 
-                            settings.onRowAfter( $el );
+                            settings.onRowAfter(setup.thisElement);
 
-                            // Clear the array elements in the jump to a new line
-                            el = [];
+                        });
 
-                        };
-                        
-                    });
-
-                    return true;
-
-                };
-
-                // If the amount of rows == 1
-                if ( setup.rowCount == 1 ) {
-
-                    settings.onRowBefore( setup.thisElement );
-
-                    // First, set the height of the child elements
-                    for ( var i = 0; i < settings.child.length; i++ ) {
-                        method.setHeight( 
-                            setup.thisWrap.find(settings.child[i]), 
-                            method.getMaxHeight( setup.thisWrap.find(settings.child[i]) )
-                        );
                     }
 
-                    // Sets the height the element itself
-                    method.setHeight(
-                        setup.thisElement,
-                        method.getMaxHeight( setup.thisWrap.find(setup.thisElement))
-                    );
+                }
 
-                    settings.onRowAfter( setup.thisElement );
 
-                };
-                
-                
             });
-            
-            // That did not work when you restart
-            if ( !pluginLoader ) {
 
-                settings.onLoad( element );
+            // That did not work when you restart
+            if( !pluginLoader ) {
+
+                settings.onLoad(element);
                 pluginLoader = true;
 
-            };
+            }
 
-        };
+        }
 
-        if ( settings.windowLoad ) {
+        if( settings.windowLoad ) {
 
             $(window).on('load', init);
 
@@ -317,27 +415,25 @@
 
             init();
 
-            if ( settings.windowLoadReset ) {
+            if( settings.windowLoadReset ) {
                 $(window).on('load', init);
-            };
+            }
 
-        };
-
-
+        }
 
 
         // Restarting when resize
         $(window).on('resize', function() {
-            
-            settings.onResizeBefore( element );
+
+            settings.onResizeBefore(element);
             init();
-            settings.onResizeAfter( element );
-            
+            settings.onResizeAfter(element);
+
         });
-        
+
 
         return element;
 
     };
-    
-})( jQuery );
+
+})(jQuery);
