@@ -29,9 +29,16 @@ button {
     display: inline-block;
     width: 100px;
     margin: 15px;
+    padding: 15px 0 25px;
     vertical-align: top;
     box-shadow: 0 0 10px #cdcdcd;
     border-radius: 5px;
+    border: 1px solid #000;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    
 }
 
 .inner-block {
