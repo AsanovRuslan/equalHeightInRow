@@ -6,12 +6,12 @@
 
     <link rel="stylesheet" href="styles.css">
     <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="jquery.equalHeightInRow.min.js"></script>
+    <script type="text/javascript" src="jquery.equalHeightInRow.js"></script>
 
     <script>
         function init () {
             $('.block').equalHeightInRow({
-                child: ['.inner-block','.inner-block-2']
+                child: ['.inner-block','.inner-block-2','.block-image']
             });
         }
 
@@ -96,7 +96,10 @@
     <div class="block-wrap">
 
         <div class="block">
-            <div class="inner-block"><img src="http://lorempixel.com/70/50/" alt=""/>consectetur, possimus laboriosam?</div>
+            <div class="inner-block">
+                <div class="block-image"><img src="http://lorempixel.com/70/50/" alt=""/></div>
+                consectetur, possimus laboriosam?
+            </div>
 
             <div class="inner-block-2">Quibusdam alias dicta distinctio officia iure tempora,!</div>
             
@@ -105,8 +108,10 @@
         <div class="block">
 
             <div class="inner-block">
-                <img src="http://lorempixel.com/70/80/" alt=""/>
-                <img src="http://lorempixel.com/70/800/" alt=""/>
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/80/" alt=""/>
+                    <img src="http://lorempixel.com/70/30/" alt=""/>
+                </div>
                 <div>Lorem ipsum dolor sit amet Labore?</div>
             </div>
 
@@ -116,7 +121,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/70/20/" alt=""/>Lorem ipsum dolor sit amet, consectetur adipisicing elit?</div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/20/" alt=""/>
+                </div>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit?
+            </div>
 
             <div class="inner-block-2">Lorem ipsum</div>
             
@@ -124,7 +134,11 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/70/90/" alt=""/><div>sapiente est temporibus perspiciatis asperiores voluptatum tempora.</div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/90/" alt=""/>
+                </div>
+                <div>sapiente est temporibus perspiciatis asperiores voluptatum tempora.</div>
             </div>
 
             <div class="inner-block-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
@@ -132,7 +146,12 @@
         </div>
 
         <div class="block">
-            <div class="inner-block"><img src="http://lorempixel.com/70/10/" alt=""/>Dolorum cupiditate sit illo, consectetur, possimus laboriosam?</div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/10/" alt=""/>
+                </div>
+                Dolorum cupiditate sit illo, consectetur, possimus laboriosam?
+            </div>
 
             <div class="inner-block-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </div>
             
@@ -140,7 +159,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/50/50/" alt=""/><div>cum necessitatibus neque</div></div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/50/50/" alt=""/>
+                </div>
+                <div>cum necessitatibus neque</div>
+            </div>
 
             <div class="inner-block-2">Lorem</div>
 
@@ -148,7 +172,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/60/50/" alt=""/>Lorem ipsum dolor sit amet?</div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/60/50/" alt=""/>
+                </div>
+                Lorem ipsum dolor sit amet?
+            </div>
 
             <div class="inner-block-2">ipsumLorem ipsum orem ipsum Lorem ipsum orem ipsum</div>
 
@@ -156,7 +185,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/70/55/" alt=""/><div>temporibus perspiciatis asperiores voluptatum tempora.</div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/55/" alt=""/>
+                </div>
+                <div>temporibus perspiciatis asperiores voluptatum tempora.
+            </div>
 
             </div>
 
@@ -166,7 +200,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/70/70/" alt=""/><div>cum necessitatibus neque</div></div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/70/" alt=""/>
+                </div>
+                <div>cum necessitatibus neque</div>
+            </div>
 
             <div class="inner-block-2">Lorem cum necessitatibus neque</div>
 
@@ -174,7 +213,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/70/80/" alt=""/><div>cum necessitatibus neque</div></div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/80/" alt=""/>
+                </div>
+                <div>cum necessitatibus neque</div>
+            </div>
 
             <div class="inner-block-2">Lorem</div>
 
@@ -182,7 +226,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/70/86/" alt=""/>Lorem ipsum dolor sit amet?</div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/86/" alt=""/>
+                </div>
+                Lorem ipsum dolor sit amet?
+            </div>
 
             <div class="inner-block-2">ipsum Lorem ipsum orem ipsum</div>
 
@@ -190,7 +239,12 @@
 
         <div class="block">
 
-            <div class="inner-block"><img src="http://lorempixel.com/70/42/" alt=""/>Lorem ipsum dolor sit amet?</div>
+            <div class="inner-block">
+                <div class="block-image">
+                    <img src="http://lorempixel.com/70/42/" alt=""/>
+                </div>
+                Lorem ipsum dolor sit amet?
+            </div>
 
             <div class="inner-block-2">ipsumLorem ipsum orem</div>
 

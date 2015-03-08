@@ -1,6 +1,6 @@
 /***
  *
- * jquery.equalHeightInRow v1.1
+ * jquery.equalHeightInRow v2.0
  * The jQuery plugin for equal height of the elements in the row
  * Asanov Ruslan //github.com/AsanovRuslan
  * Released under the MIT license - http://opensource.org/licenses/MIT
@@ -15,7 +15,7 @@
 
 ;(function( $ ) {
 
-    var method = {
+    var methods = {
 
         /**
          * Handler load images
@@ -85,7 +85,7 @@
 
                 // Process each image individually
                 images.each(function() {
-                    method.imageLoad($(this), imageDeferred);
+                    methods.imageLoad($(this), imageDeferred);
                 });
 
             });
@@ -236,10 +236,10 @@
 
 
         }, options);
-
-        var element      = this;
-        var wrap         = settings.parent ? $(element).closest(settings.parent) : $(element).parent();
-        var pluginLoader = false;
+        
+        var element       = this;
+        var wrap          = settings.parent ? $(element).closest(settings.parent) : $(element).parent();
+        var pluginLoading = false;
 
 
         if( !element.length ) {
@@ -258,7 +258,7 @@
                 };
 
                 // Amount elements in a row
-                setup.amountInRow = method.countElementInRow(setup.thisElement, settings.eachRow) || 0;
+                setup.amountInRow = methods.countElementInRow(setup.thisElement, settings.eachRow) || 0;
 
                 // If needed calculate for each line
                 if( settings.eachRow ) {
@@ -280,19 +280,19 @@
 
                             settings.onRowBefore($el);
 
-                            method.rowLoad($el).always(function() {
+                            methods.rowLoad($el).always(function() {
 
                                 // First, set the height of the child elements
                                 for( var i = 0; i < settings.child.length; i++ ) {
-                                    method.setHeight(
+                                    methods.setHeight(
                                         $el.find(settings.child[i]), 
-                                        method.getMaxHeight($el.find(settings.child[i]))
+                                        methods.getMaxHeight($el.find(settings.child[i]))
                                     );
                                 }
 
                                 // Sets the height the element itself
                                 if( !settings.applyOnlyChild ) {
-                                    method.setHeight($el, method.getMaxHeight($el));
+                                    methods.setHeight($el, methods.getMaxHeight($el));
                                 }
 
 
@@ -338,19 +338,19 @@
 
                                 settings.onRowBefore($el);
 
-                                method.rowLoad($el).always(function() {
+                                methods.rowLoad($el).always(function() {
 
                                     // First, set the height of the child elements
                                     for( var i = 0; i < settings.child.length; i++ ) {
-                                        method.setHeight(
+                                        methods.setHeight(
                                             $el.find(settings.child[i]), 
-                                            method.getMaxHeight($el.find(settings.child[i]))
+                                            methods.getMaxHeight($el.find(settings.child[i]))
                                         );
                                     }
 
                                     // Sets the height the element itself
                                     if( !settings.applyOnlyChild ) {
-                                        method.setHeight($el, method.getMaxHeight($el));
+                                        methods.setHeight($el, methods.getMaxHeight($el));
                                     }
 
                                     settings.onRowAfter($el);
@@ -370,20 +370,20 @@
 
                         settings.onRowBefore(setup.thisElement);
 
-                        method.rowLoad($el).always(function() {
+                        methods.rowLoad($el).always(function() {
 
                             // First, set the height of the child elements
                             for( var i = 0; i < settings.child.length; i++ ) {
-                                method.setHeight(
+                                methods.setHeight(
                                     setup.thisWrap.find(settings.child[i]), 
-                                    method.getMaxHeight(setup.thisWrap.find(settings.child[i]))
+                                    methods.getMaxHeight(setup.thisWrap.find(settings.child[i]))
                                 );
                             }
 
                             // Sets the height the element itself
-                            method.setHeight(
+                            methods.setHeight(
                                 setup.thisElement, 
-                                method.getMaxHeight(setup.thisWrap.find(setup.thisElement))
+                                methods.getMaxHeight(setup.thisWrap.find(setup.thisElement))
                             );
 
                             settings.onRowAfter(setup.thisElement);
@@ -398,39 +398,32 @@
             });
 
             // That did not work when you restart
-            if( !pluginLoader ) {
-
+            if( !pluginLoading ) {
                 settings.onLoad(element);
-                pluginLoader = true;
-
+                pluginLoading = true;
             }
 
         }
 
         if( settings.windowLoad ) {
-
             $(window).on('load', init);
-
         } else {
-
+            
             init();
-
+            
             if( settings.windowLoadReset ) {
                 $(window).on('load', init);
             }
-
+            
         }
-
-
+        
         // Restarting when resize
-        $(window).on('resize', function() {
-
+        $(window).on('resize orientationchange', function() {
             settings.onResizeBefore(element);
             init();
             settings.onResizeAfter(element);
 
         });
-
 
         return element;
 
