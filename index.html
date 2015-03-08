@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Equal height in row by AsanovRuslan</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/AsanovRuslan/equalHeightInRow">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/AsanovRuslan/equalHeightInRow/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/AsanovRuslan/equalHeightInRow/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Equal height in row</h1>
+          <p>The jQuery plugin for equal height of the elements in the row</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/AsanovRuslan">AsanovRuslan</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="equal-height-in-the-row" class="anchor" href="#equal-height-in-the-row" aria-hidden="true"><span class="octicon octicon-link"></span></a>Equal height in the row</h1>
+
+<h3>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h3>
+
+<pre><code>The jQuery plugin for equal height of the elements in the row
+</code></pre>
+
+<h3>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<ul>
+<li>match the heights of elements anywhere on the page</li>
+<li>match the heights of child elements</li>
+<li>the number of elements in a row may be different</li>
+<li>responsive, automatically updates on window resize</li>
+<li>callback events</li>
+<li>handles images</li>
+<li>tested in IE8+, Chrome, Safari, Firefox, Mobile browsers</li>
+</ul>
+
+<h3>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
+
+<pre><code>$('.block').equalHeightInRow();
+</code></pre>
+
+<h3>
+<a id="full-example" class="anchor" href="#full-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Full example</h3>
+
+<pre><code>    $('.block').equalHeightInRow({
+        child           : ['.child1','.child2'],
+        eachRow         : true,
+        windowLoad      : true,
+        windowLoadReset : true,
+        applyOnlyChild  : true,
+        parent          : '.wrapper',
+        onRowBefore     : function( elements ) {},
+        onRowAfter      : function( elements ) {},
+        onResizeBefore  : function( elements ) {},
+        onResizeAfter   : function( elements ) {},
+        onLoad          : function( elements ) {}
+    });
+</code></pre>
+
+<h3>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<p><strong>child</strong> Equal height internal child elements</p>
+
+<pre><code>default: []
+child: ['.child1','.child2']
+</code></pre>
+
+<p><strong>eachRow</strong> Apply for each row individually </p>
+
+<pre><code>default: false
+eachRow: true
+</code></pre>
+
+<p><strong>windowLoad</strong> Execute after full page load</p>
+
+<pre><code>default: false
+windowLoad: true
+</code></pre>
+
+<p><strong>windowLoadReset</strong> Reset on full page load, callback "onLoad" not call</p>
+
+<pre><code>default: false
+windowLoadReset: true
+</code></pre>
+
+<p><strong>applyOnlyChild</strong> Apply only child</p>
+
+<pre><code>default: false
+applyOnlyChild: true
+</code></pre>
+
+<p><strong>parent</strong> Set custom parent</p>
+
+<pre><code>default: false
+parent: '.wrapper'
+</code></pre>
+
+<h3>
+<a id="events" class="anchor" href="#events" aria-hidden="true"><span class="octicon octicon-link"></span></a>Events</h3>
+
+<p><strong>onRowBefore</strong> Before assigning height in the row</p>
+
+<pre><code>default: function(){}
+onRowBefore: function( elements ){ // your code here }
+arguments:
+  elements: elements in row
+</code></pre>
+
+<p><strong>onRowAfter</strong> After assigning height in the row</p>
+
+<pre><code>default: function(){}
+onRowAfter: function( elements ){ // your code here }
+arguments:
+  elements: elements in row
+</code></pre>
+
+<p><strong>onResizeBefore</strong> Before the resize event</p>
+
+<pre><code>default: function(){}
+onResizeBefore: function( elements ){ // your code here }
+arguments:
+  elements: all elements in wrapper
+</code></pre>
+
+<p><strong>onResizeAfter</strong> After the resize event</p>
+
+<pre><code>default: function(){}
+onResizeAfter: function( elements ){ // your code here }
+arguments:
+  elements: all elements in wrapper
+</code></pre>
+
+<p><strong>onLoad</strong> Executes immediately after plugin is fully loaded</p>
+
+<pre><code>default: function(){}
+onLoad: function( elements ){ // your code here }
+arguments:
+  elements: all elements in wrapper
+</code></pre>
+
+<h4>
+<a id="released-under-the-mit-license---httpopensourceorglicensesmit" class="anchor" href="#released-under-the-mit-license---httpopensourceorglicensesmit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Released under the MIT license - <a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>
+</h4>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
