@@ -69,24 +69,30 @@
                     this.count = 0;
                 });
 
-                imageDeferred.progress(function() {
-                    imageDeferred.count++;
-                    // If the loading images in a row completed
-                    if( imageDeferred.count == imagesLength ) {
-                        imageDeferred.resolve();
-                    }
-                }).always(function() {
+                imageDeferred.always(function() {
                     // Notifies that loading image in block is completed
                     setTimeout(function() {
                         rowDeferred.notify();
                     }, 0)
 
                 });
+                
+                if ( imagesLength == 0 ) {
+                    imageDeferred.resolve();
+                } else {
+                    imageDeferred.progress(function() {
+                        imageDeferred.count++;
+                        // If the loading images in a row completed
+                        if( imageDeferred.count == imagesLength ) {
+                            imageDeferred.resolve();
+                        }
+                    });
 
-                // Process each image individually
-                images.each(function() {
-                    methods.imageLoad($(this), imageDeferred);
-                });
+                    // Process each image individually
+                    images.each(function() {
+                        methods.imageLoad($(this), imageDeferred);
+                    });
+                }
 
             });
 
@@ -152,17 +158,29 @@
 
             var height     = 0;
             var eachHeight = 0;
+            var padding    = 0;
+            var border     = 0;
+            var $this      = null;
 
             // Resetting height elements for real values
             elements.css({
                 'height'     : '',
-                'min-height' : 0
+                'min-height' : ''
             });
 
             elements.each(function() {
+                
+                $this = $(this);
+                
+                if ( $this.css('box-sizing') != "border-box" ) {
+                    padding = parseInt($this.css('padding-top')) + parseInt($this.css('padding-bottom'));
+                    border = parseInt($this.css('border-top') || 0) + parseInt($this.css('border-bottom') || 0);
 
-                eachHeight = $(this).outerHeight();
-
+                    eachHeight = $(this).outerHeight() - padding - border;                
+                } else {
+                    eachHeight = $(this).outerHeight();
+                }
+                
                 if( eachHeight > height ) {
                     height = eachHeight;
                 }
@@ -339,7 +357,7 @@
                                 settings.onRowBefore($el);
 
                                 methods.rowLoad($el).always(function() {
-
+                                    
                                     // First, set the height of the child elements
                                     for( var i = 0; i < settings.child.length; i++ ) {
                                         methods.setHeight(
